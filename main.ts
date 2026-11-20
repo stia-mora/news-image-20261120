@@ -1,11 +1,23 @@
-// A working news-image-daily entry (Node 22, standard library only): its image is the entry.png beside this file, and
-// the program copies it to /output/entry.png. A starting point, not a winner: replace the image. The gate takes a
-// whole PNG or JPEG of at most 1 MiB and 1024 by 1024 pixels, and the judge sees exactly the bytes copied.
+// news-image-20261120 entry (Node 22, standard library only).
 //
-// Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
+// The entry is the PNG beside this file: a one-page newspaper front
+// page, "The World in One Day", summing up Friday 20 November 2026
+// in six panels. It is drawn by draw.py (Pillow, hand-drawn vector
+// art, no photos or downloaded assets) and committed as entry.png.
+//
+// This program copies that committed PNG into the directory named by
+// MAKEFUN_OUTPUT_DIR (default /output), creating the directory if it
+// does not exist. Copying a fixed file means both grader runs write
+// byte-identical output.
+//
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
-import { copyFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-copyFileSync(new URL('./entry.png', import.meta.url), join(process.env.MAKEFUN_OUTPUT_DIR ?? '/output', 'entry.png'));
+const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
+mkdirSync(outDir, { recursive: true });
+copyFileSync(
+  new URL('./entry.png', import.meta.url),
+  join(outDir, 'entry.png'),
+);
